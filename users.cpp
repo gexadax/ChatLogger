@@ -1,5 +1,6 @@
 #include "users.h"
 #include "database.h" 
+#include "logger.h"
 
 UserManager::UserManager() : hdbc(nullptr), hstmt(nullptr), ret(SQL_SUCCESS) {
     DatabaseManager dbManager;
@@ -32,10 +33,12 @@ bool UserManager::registerUser(const std::string& first_name, const std::string&
 
         if (ret != SQL_SUCCESS && ret != SQL_SUCCESS_WITH_INFO) {
             std::cerr << "Failed to register user." << std::endl;
+            logger.WriteLog("Failed to register user.");
             return false;
         }
 
         std::cout << "User registered successfully." << std::endl;
+        logger.WriteLog("User registered successfully.");
 
         SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
         dbManager.disconnectFromDatabase();
@@ -43,6 +46,7 @@ bool UserManager::registerUser(const std::string& first_name, const std::string&
     }
     else {
         std::cerr << "Failed to connect to the database." << std::endl;
+        logger.WriteLog("Failed to connect to the database.");
         return false;
     }
 }
@@ -51,15 +55,13 @@ bool UserManager::deleteUserAndMessages(const std::string& first_name) {
     DatabaseManager dbManager;
     if (dbManager.connectToDatabase()) {
         ret = SQLAllocHandle(SQL_HANDLE_STMT, hdbc, &hstmt);
-
-        // Остальной код без изменений
-
         SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
         dbManager.disconnectFromDatabase();
         return true;
     }
     else {
         std::cerr << "Failed to connect to the database." << std::endl;
+        logger.WriteLog("Failed to connect to the database.");
         return false;
     }
 }
@@ -82,14 +84,16 @@ bool UserManager::loginPass(const std::string& first_name, const std::string& pa
 
         ret = SQLExecute(hstmt);
 
-        SQLINTEGER user_id = -1; // Инициализация переменной user_id
+        SQLINTEGER user_id = -1;
         ret = SQLBindCol(hstmt, 1, SQL_C_SLONG, &user_id, sizeof(user_id), NULL);
 
         ret = SQLFetch(hstmt);
         if (ret == SQL_SUCCESS || ret == SQL_SUCCESS_WITH_INFO) {
             std::cout << "Retrieved user_id: " << user_id << std::endl;
+            logger.WriteLog("Retrieved user_id: ");
             if (user_id > 0) {
                 std::cout << "Login successful. User ID: " << user_id << std::endl;
+                logger.WriteLog("Login successful. User ID: ");
                 SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
                 dbManager.disconnectFromDatabase();
                 return true;
@@ -97,6 +101,7 @@ bool UserManager::loginPass(const std::string& first_name, const std::string& pa
         }
         else {
             std::cerr << "Login failed." << std::endl;
+            logger.WriteLog("Login failed.");
             SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
             dbManager.disconnectFromDatabase();
             return false;
@@ -107,6 +112,7 @@ bool UserManager::loginPass(const std::string& first_name, const std::string& pa
     }
     else {
         std::cerr << "Failed to connect to the database." << std::endl;
+        logger.WriteLog("Failed to connect to the database.");
         return false;
     }
 

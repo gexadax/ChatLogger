@@ -11,7 +11,6 @@ private:
     SQLHANDLE henv;
     SQLHANDLE hdbc;
     SQLHANDLE hstmt;
-
 public:
     DatabaseManager();
     ~DatabaseManager();

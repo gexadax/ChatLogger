@@ -3,13 +3,14 @@
 #include <iostream>
 #include "users.h"
 #include "message.h"
+#include "logger.h"
 
 SQLRETURN ret;
 SQLHANDLE henv;
 SQLHANDLE hdbc;
 SQLHANDLE hstmt;
-
 MessageManager messageManager;
+
 void ChatManager::displayUserChat(const std::string& username) {
     DatabaseManager dbManager;
     if (dbManager.connectToDatabase()) {

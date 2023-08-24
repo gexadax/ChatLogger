@@ -2,6 +2,7 @@
 #include "database.h"
 #include <iostream>
 #include "users.h"
+#include "logger.h"
 
 extern SQLRETURN ret;
 extern SQLHANDLE henv;
@@ -40,6 +41,7 @@ bool MessageManager::sendMessage(const std::string& senderFirstName, const std::
         }
         else {
             std::cerr << "Failed to retrieve sender ID." << std::endl;
+            logger.WriteLog("Failed to retrieve sender ID.");
             dbManager.disconnectFromDatabase();
             return false;
         }
@@ -58,6 +60,7 @@ bool MessageManager::sendMessage(const std::string& senderFirstName, const std::
         }
         else {
             std::cerr << "Failed to retrieve receiver ID." << std::endl;
+            logger.WriteLog("Failed to retrieve receiver ID.");
             dbManager.disconnectFromDatabase();
             return false;
         }
@@ -74,9 +77,11 @@ bool MessageManager::sendMessage(const std::string& senderFirstName, const std::
 
         if (ret == SQL_SUCCESS || ret == SQL_SUCCESS_WITH_INFO) {
             std::cout << "Message sent." << std::endl;
+            logger.WriteLog("Message sent.");
         }
         else {
             std::cerr << "Failed to send message." << std::endl;
+            logger.WriteLog("Failed to send message.");
             dbManager.disconnectFromDatabase();
             return false;
         }
@@ -87,6 +92,7 @@ bool MessageManager::sendMessage(const std::string& senderFirstName, const std::
     }
     else {
         std::cerr << "Failed to connect to the database." << std::endl;
+        logger.WriteLog("Failed to connect to the database.");
         return false;
     }
 }

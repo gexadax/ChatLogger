@@ -18,8 +18,8 @@ private:
         std::string email;
         std::string password_hash;
     };
-
     std::vector<User> users;
+    
 public:
     UserManager();
     ~UserManager();

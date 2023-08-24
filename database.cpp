@@ -1,4 +1,7 @@
 #include "database.h"
+#include "logger.h"
+
+Logger logger("log.txt");
 
 DatabaseManager::DatabaseManager() : henv(nullptr), hdbc(nullptr), hstmt(nullptr), ret(SQL_SUCCESS) {}
 
@@ -9,12 +12,13 @@ DatabaseManager::~DatabaseManager() {
 bool DatabaseManager::connectToDatabase() {
     hstmt = NULL;
     ret = SQL_SUCCESS;
-    //std::cout << "Connecting to the database..." << std::endl;
-
+    std::cout << "Connecting to the database..." << std::endl;
+    logger.WriteLog("Connecting to the database...");
     // Выделяем ресурсы для окружения ODBC
     ret = SQLAllocHandle(SQL_HANDLE_ENV, SQL_NULL_HANDLE, &henv);
     if (ret != SQL_SUCCESS && ret != SQL_SUCCESS_WITH_INFO) {
         //std::cerr << "Failed to allocate environment handle." << std::endl;
+        logger.WriteLog("Failed to allocate environment handle.");
         return false;
     }
 
@@ -22,6 +26,7 @@ bool DatabaseManager::connectToDatabase() {
     ret = SQLSetEnvAttr(henv, SQL_ATTR_ODBC_VERSION, (SQLPOINTER)SQL_OV_ODBC3, 0);
     if (ret != SQL_SUCCESS && ret != SQL_SUCCESS_WITH_INFO) {
         //std::cerr << "Failed to set ODBC version." << std::endl;
+        logger.WriteLog("Failed to set ODBC version.");
         SQLFreeHandle(SQL_HANDLE_ENV, henv);
         return false;
     }
@@ -30,6 +35,7 @@ bool DatabaseManager::connectToDatabase() {
     ret = SQLAllocHandle(SQL_HANDLE_DBC, henv, &hdbc);
     if (ret != SQL_SUCCESS && ret != SQL_SUCCESS_WITH_INFO) {
         //std::cerr << "Failed to allocate database connection handle." << std::endl;
+        logger.WriteLog("Failed to allocate database connection handle.");
         SQLFreeHandle(SQL_HANDLE_ENV, henv);
         return false;
     }
@@ -40,17 +46,20 @@ bool DatabaseManager::connectToDatabase() {
     ret = SQLDriverConnect(hdbc, NULL, (SQLWCHAR*)connectionString.c_str(), SQL_NTS, NULL, 0, NULL, SQL_DRIVER_COMPLETE);
     if (ret != SQL_SUCCESS && ret != SQL_SUCCESS_WITH_INFO) {
         //std::cerr << "Failed to connect to the database." << std::endl;
+        logger.WriteLog("Failed to connect to the database.");
         SQLFreeHandle(SQL_HANDLE_DBC, hdbc);
         SQLFreeHandle(SQL_HANDLE_ENV, henv);
 
         // Если подключение не удалось, выполняем checkAndCreateDatabase()
         if (!checkAndCreateDatabase()) {
             //std::cerr << "Failed to check and create database." << std::endl;
+            logger.WriteLog("Failed to check and create database.");
             return false;
         }
     }
 
     //std::cout << "Connected to the database." << std::endl;
+    logger.WriteLog("Connected to the database.");
 
     // Возвращаем результат успешности подключения
     return (ret == SQL_SUCCESS || ret == SQL_SUCCESS_WITH_INFO);
@@ -62,7 +71,7 @@ void DatabaseManager::disconnectFromDatabase() {
         hstmt = NULL;
     }
     //std::cout << "Disconnecting from the database..." << std::endl;
-
+    logger.WriteLog("Disconnecting from the database...");
     // Освобождаем обработчик выражения, если он был выделен
     if (hstmt) {
         SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
@@ -72,6 +81,7 @@ void DatabaseManager::disconnectFromDatabase() {
     if (hdbc) {
         SQLDisconnect(hdbc);
         //std::cout << "Disconnected from the database." << std::endl;
+        logger.WriteLog("Disconnected from the database.");
         SQLFreeHandle(SQL_HANDLE_DBC, hdbc);
     }
 
@@ -131,53 +141,61 @@ bool DatabaseManager::createTables() {
 
         if (ret != SQL_SUCCESS && ret != SQL_SUCCESS_WITH_INFO) {
             std::cerr << "Failed to create 'users' table." << std::endl;
+            logger.WriteLog("Failed to create 'users' table.");
             disconnectFromDatabase();
             return false;
         }
         std::cout << "Table 'users' created." << std::endl;
+        logger.WriteLog("Table 'users' created.");
 
         ret = SQLExecDirectA(hstmt, (SQLCHAR*)queryCreatePasswords.c_str(), SQL_NTS);
 
         if (ret != SQL_SUCCESS && ret != SQL_SUCCESS_WITH_INFO) {
             std::cerr << "Failed to create 'passwords' table." << std::endl;
+            logger.WriteLog("Failed to create 'passwords' table.");
             disconnectFromDatabase();
             return false;
         }
         std::cout << "Table 'passwords' created." << std::endl;
-
+        logger.WriteLog("Table 'passwords' created.");
         ret = SQLExecDirectA(hstmt, (SQLCHAR*)queryCreateMessages.c_str(), SQL_NTS);
 
         if (ret != SQL_SUCCESS && ret != SQL_SUCCESS_WITH_INFO) {
             std::cerr << "Failed to create 'messages' table." << std::endl;
+            logger.WriteLog("Failed to create 'messages' table.");
             disconnectFromDatabase();
             return false;
         }
         std::cout << "Table 'messages' created." << std::endl;
+        logger.WriteLog("Table 'messages' created.");
 
         ret = SQLExecDirectA(hstmt, (SQLCHAR*)queryCreateUserTrigger.c_str(), SQL_NTS);
 
         if (ret != SQL_SUCCESS && ret != SQL_SUCCESS_WITH_INFO) {
             std::cerr << "Failed to create 'register_user_trigger' trigger." << std::endl;
+            logger.WriteLog("Failed to create 'register_user_trigger' trigger.");
             disconnectFromDatabase();
             return false;
         }
         std::cout << "Trigger 'register_user_trigger' created." << std::endl;
-
+        logger.WriteLog("Trigger 'register_user_trigger' created.");
         ret = SQLExecDirectA(hstmt, (SQLCHAR*)queryCreateDeleteUserTrigger.c_str(), SQL_NTS);
 
         if (ret != SQL_SUCCESS && ret != SQL_SUCCESS_WITH_INFO) {
             std::cerr << "Failed to create 'delete_user_trigger' trigger." << std::endl;
+            logger.WriteLog("Failed to create 'delete_user_trigger' trigger.");
             disconnectFromDatabase();
             return false;
         }
         std::cout << "Trigger 'delete_user_trigger' created." << std::endl;
-
+        logger.WriteLog("Trigger 'delete_user_trigger' created.");
         SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
         disconnectFromDatabase();
         return true;
     }
     else {
         std::cerr << "Failed to connect to the database." << std::endl;
+        logger.WriteLog("Failed to connect to the database.");
         return false;
     }
     system("cls");
@@ -201,9 +219,11 @@ bool DatabaseManager::insertDataIntoTable() {
 
         if (ret == SQL_SUCCESS && rowCount > 0) {
             std::cout << "Data inserted into 'users' table." << std::endl;
+            logger.WriteLog("Data inserted into 'users' table.");
         }
         else {
             std::cerr << "Failed to insert data into 'users' table." << std::endl;
+            logger.WriteLog("Failed to insert data into 'users' table.");
             disconnectFromDatabase();
             return false;
         }
@@ -220,9 +240,11 @@ bool DatabaseManager::insertDataIntoTable() {
 
         if (ret == SQL_SUCCESS && rowCount > 0) {
             std::cout << "Data inserted into 'messages' table." << std::endl;
+            logger.WriteLog("Data inserted into 'messages' table.");
         }
         else {
             std::cerr << "Failed to insert data into 'messages' table." << std::endl;
+            logger.WriteLog("Failed to insert data into 'messages' table.");
             disconnectFromDatabase();
             return false;
         }
@@ -233,18 +255,21 @@ bool DatabaseManager::insertDataIntoTable() {
     }
     else {
         std::cerr << "Failed to connect to the database." << std::endl;
+        logger.WriteLog("Failed to connect to the database.");
         return false;
     }
 }
 
 bool DatabaseManager::checkAndCreateDatabase() {
     std::wcout << L"Initializing ODBC environment..." << std::endl;
+    logger.WriteLog("Initializing ODBC environment...");
     ret = SQLAllocHandle(SQL_HANDLE_ENV, SQL_NULL_HANDLE, &henv);
     ret = SQLSetEnvAttr(henv, SQL_ATTR_ODBC_VERSION, (SQLPOINTER)SQL_OV_ODBC3, 0);
     ret = SQLAllocHandle(SQL_HANDLE_DBC, henv, &hdbc);
 
     // Connect to the MySQL server
     std::wcout << L"Connecting to MySQL server..." << std::endl;
+    logger.WriteLog("Connecting to MySQL server...");
     SQLWCHAR connStr[] = L"DRIVER={MySQL ODBC 8.0 ANSI Driver};"
         L"SERVER=localhost;"
         L"USER=root;"
@@ -254,6 +279,7 @@ bool DatabaseManager::checkAndCreateDatabase() {
     ret = SQLDriverConnectW(hdbc, NULL, connStr, SQL_NTS, NULL, 0, NULL, SQL_DRIVER_NOPROMPT);
     if (ret != SQL_SUCCESS && ret != SQL_SUCCESS_WITH_INFO) {
         std::wcerr << L"Failed to connect to the MySQL server." << std::endl;
+        logger.WriteLog("Failed to connect to the MySQL server.");
         SQLFreeHandle(SQL_HANDLE_DBC, hdbc);
         SQLFreeHandle(SQL_HANDLE_ENV, henv);
         return false;
@@ -266,6 +292,7 @@ bool DatabaseManager::checkAndCreateDatabase() {
 
     if (ret != SQL_SUCCESS && ret != SQL_SUCCESS_WITH_INFO) {
         std::wcerr << L"Failed to execute the database existence check query." << std::endl;
+        logger.WriteLog("Failed to execute the database existence check query.");
         SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
         SQLDisconnect(hdbc);
         SQLFreeHandle(SQL_HANDLE_DBC, hdbc);
@@ -280,10 +307,12 @@ bool DatabaseManager::checkAndCreateDatabase() {
         // Create the database
         std::wstring createDbQuery = L"CREATE DATABASE chatdb";
         std::wcout << L"Creating 'chatdb' database..." << std::endl;
+        logger.WriteLog("Creating 'chatdb' database...");
         ret = SQLExecDirectW(hstmt, (SQLWCHAR*)createDbQuery.c_str(), SQL_NTS);
 
         if (ret != SQL_SUCCESS && ret != SQL_SUCCESS_WITH_INFO) {
             std::wcerr << L"Failed to create 'chatdb' database." << std::endl;
+            logger.WriteLog("Failed to create 'chatdb' database.");
             SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
             SQLDisconnect(hdbc);
             SQLFreeHandle(SQL_HANDLE_DBC, hdbc);
@@ -292,12 +321,14 @@ bool DatabaseManager::checkAndCreateDatabase() {
         }
 
         std::wcout << L"Database 'chatdb' created." << std::endl;
+        logger.WriteLog("Database 'chatdb' created.");
         // Create tables and insert data
         createTables();
         insertDataIntoTable();
     }
     else {
         std::wcout << L"Connection to database 'chatdb' established." << std::endl;
+        logger.WriteLog("Connection to database 'chatdb' established.");
     }
 
     SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
