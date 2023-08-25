@@ -1,10 +1,7 @@
 #pragma once
-
 #include <windows.h>
 #include <sql.h>
-#include <sqlext.h>
 #include <iostream>
-#include <string>
 #include <vector>
 
 class UserManager {

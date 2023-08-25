@@ -22,7 +22,7 @@ std::string Logger::ReadLog() {
     while (std::getline(logFile, line)) {
         logContent += line + '\n';
     }
-    logFile.clear(); // Clear any EOF flags
-    logFile.seekg(0); // Reset file position to the beginning
+    logFile.clear();
+    logFile.seekg(0);
     return logContent;
 }

@@ -12,7 +12,6 @@ UserManager::UserManager() : hdbc(nullptr), hstmt(nullptr), ret(SQL_SUCCESS) {
     }
 }
 
-
 UserManager::~UserManager() {
     SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
 }
@@ -24,7 +23,6 @@ bool UserManager::registerUser(const std::string& first_name, const std::string&
 
         ret = SQLAllocHandle(SQL_HANDLE_STMT, hdbc, &hstmt);
 
-        // Insert user data
         ret = SQLPrepareA(hstmt, (SQLCHAR*)queryInsertUser.c_str(), SQL_NTS);
         ret = SQLBindParameter(hstmt, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, 50, 0, (SQLCHAR*)first_name.c_str(), 0, NULL);
         ret = SQLBindParameter(hstmt, 2, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, 50, 0, (SQLCHAR*)last_name.c_str(), 0, NULL);

@@ -1,12 +1,4 @@
-﻿#include <windows.h>
-#include <sql.h>
-#include <sqlext.h>
-#include <iostream>
-#include <string>
-#include "database.h"
-#include "chat.h"
-
-void chatMenu();
+﻿void chatMenu();
 
 int main() {
     chatMenu();
