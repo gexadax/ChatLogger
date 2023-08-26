@@ -11,50 +11,37 @@ SQLHANDLE hstmt;
 MessageManager messageManager;
 
 void ChatManager::displayUserChat(const std::string& username) {
-    DatabaseManager dbManager;
-    if (dbManager.connectToDatabase()) {
-        SQLRETURN ret;
-        SQLHANDLE hstmt;
-        SQLHANDLE hdbc = dbManager.getHDBC();
-        std::string queryGetChat = "SELECT u.first_name, m.message_text, m.send_date "
-            "FROM messages m "
-            "INNER JOIN users u ON m.sender_id = u.user_id "
-            "WHERE u.first_name = ? "
-            "ORDER BY m.send_date";
 
-        ret = SQLAllocHandle(SQL_HANDLE_STMT, hdbc, &hstmt);
-        ret = SQLPrepareA(hstmt, (SQLCHAR*)queryGetChat.c_str(), SQL_NTS);
-        ret = SQLBindParameter(hstmt, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, 50, 0, (SQLCHAR*)username.c_str(), 0, NULL);
+    SQLRETURN ret;
+    SQLHANDLE hstmt;
+    std::string queryGetChat = "SELECT u.first_name, m.message_text, m.send_date "
+        "FROM messages m "
+        "INNER JOIN users u ON m.sender_id = u.user_id "
+        "WHERE u.first_name = ? "
+        "ORDER BY m.send_date";
 
-        ret = SQLExecute(hstmt);
+    ret = SQLAllocHandle(SQL_HANDLE_STMT, hdbc, &hstmt);
+    ret = SQLPrepareA(hstmt, (SQLCHAR*)queryGetChat.c_str(), SQL_NTS);
+    ret = SQLBindParameter(hstmt, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, 50, 0, (SQLCHAR*)username.c_str(), 0, NULL);
 
-        if (ret == SQL_SUCCESS || ret == SQL_SUCCESS_WITH_INFO) {
-            std::cout << "Chat history for user '" << username << "':" << std::endl;
+    ret = SQLExecute(hstmt);
 
-            SQLCHAR senderName[50], message[1000], timestamp[50];
-            SQLLEN senderNameLen, messageLen, timestampLen;
+    if (ret == SQL_SUCCESS || ret == SQL_SUCCESS_WITH_INFO) {
+        std::cout << "Chat history for user '" << username << "':" << std::endl;
 
-            while (SQLFetch(hstmt) == SQL_SUCCESS) {
-                SQLGetData(hstmt, 1, SQL_C_CHAR, senderName, sizeof(senderName), &senderNameLen);
-                SQLGetData(hstmt, 2, SQL_C_CHAR, message, sizeof(message), &messageLen);
-                SQLGetData(hstmt, 3, SQL_C_CHAR, timestamp, sizeof(timestamp), &timestampLen);
+        SQLCHAR senderName[50], message[1000], timestamp[50];
+        SQLLEN senderNameLen, messageLen, timestampLen;
 
-                std::cout << timestamp << " " << senderName << ": " << message << std::endl;
-            }
+        while (SQLFetch(hstmt) == SQL_SUCCESS) {
+            SQLGetData(hstmt, 1, SQL_C_CHAR, senderName, sizeof(senderName), &senderNameLen);
+            SQLGetData(hstmt, 2, SQL_C_CHAR, message, sizeof(message), &messageLen);
+            SQLGetData(hstmt, 3, SQL_C_CHAR, timestamp, sizeof(timestamp), &timestampLen);
 
-        }
-        else {
-            std::cerr << "Failed to retrieve chat history." << std::endl;
-            dbManager.disconnectFromDatabase();
-            return;
+            std::cout << timestamp << " " << senderName << ": " << message << std::endl;
         }
 
-        SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
-        dbManager.disconnectFromDatabase();
     }
-    else {
-        std::cerr << "Failed to connect to the database." << std::endl;
-    }
+
 }
 
 void chatRoom(const std::string& first_name) {
@@ -64,8 +51,8 @@ void chatRoom(const std::string& first_name) {
         std::cout << "Chat Room Options:" << std::endl;
         std::cout << "1. Send Message" << std::endl;
         std::cout << "2. Read Messages" << std::endl;
-        std::cout << "3. Exit Chat Room" << std::endl;
-
+        std::cout << "3. Delete User" << std::endl;
+        std::cout << "4. Exit Chat Room" << std::endl;
         std::cout << "Enter your choice: ";
         std::cin >> choice;
 
@@ -93,6 +80,19 @@ void chatRoom(const std::string& first_name) {
             break;
         }
         case 3: {
+            std::string first_name_to_delete;
+            std::cout << "Enter the first name of the user to delete: ";
+            std::cin >> first_name_to_delete;
+            UserManager userManager;
+            if (userManager.deleteUserAndMessages(first_name_to_delete)) {
+                std::cout << "User and related messages deleted successfully." << std::endl;
+            }
+            else {
+                std::cout << "Failed to delete user and related messages." << std::endl;
+            }
+            break;
+        }
+        case 4: {
             std::cout << "Exiting Chat Room." << std::endl;
             return;
         }
@@ -106,6 +106,7 @@ void chatRoom(const std::string& first_name) {
 
 void chatMenu() {
     UserManager userManager;
+    DatabaseManager dbManager;
     std::string first_name, password_hash;
     int userChoice;
 
@@ -145,6 +146,8 @@ void chatMenu() {
         }
         case 3: {
             std::cout << "Exiting the chat." << std::endl;
+            dbManager.disconnectFromDatabase();
+
             return;
         }
         default: {
