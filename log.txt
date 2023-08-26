@@ -253,3 +253,9 @@
 [2023-08-26 16:48:48] Retrieved user_id: 
 [2023-08-26 16:48:48] Login successful. User ID: 
 [2023-08-26 16:48:48] Login successful. Welcome
+[2023-08-26 17:11:19] Initializing ODBC environment...
+[2023-08-26 17:11:19] Connecting to MySQL server...
+[2023-08-26 17:11:20] Connection to database 'chatdb' established.
+[2023-08-26 17:11:23] Exiting the chat.
+[2023-08-26 17:11:23] Disconnecting from the database...
+[2023-08-26 17:11:24] Disconnected from the database.
