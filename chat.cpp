@@ -1,6 +1,9 @@
+#include <algorithm>
+
 #include "chat.h"
 #include "database.h"
 #include <iostream>
+#include <sstream>
 #include "users.h"
 #include "message.h"
 #include "logger.h"
@@ -43,7 +46,7 @@ void ChatManager::displayUserChat(const std::string& username) {
                 SQLGetData(hstmt, 2, SQL_C_CHAR, message, sizeof(message), &messageLen);
                 SQLGetData(hstmt, 3, SQL_C_CHAR, timestamp, sizeof(timestamp), &timestampLen);
 
-                std::cout << timestamp << " " << senderName << ": " << message << std::endl;logger.WriteLog("");
+                std::cout << timestamp << " " << senderName << ": " << message << std::endl;
             }
 
         }
@@ -72,8 +75,9 @@ void chatRoom(const std::string& first_name) {
         std::cout << "Chat Room Options:" << std::endl;
         std::cout << "1. Send Message" << std::endl;
         std::cout << "2. Read Messages" << std::endl;
-        std::cout << "3. Delete User" << std::endl;
-        std::cout << "4. Exit Chat Room" << std::endl;
+        std::cout << "3. Read Log" << std::endl;
+        std::cout << "4. Delete User" << std::endl;
+        std::cout << "5. Exit Chat Room" << std::endl;
         std::cout << "Enter your choice: ";
         std::cin >> choice;
 
@@ -103,6 +107,17 @@ void chatRoom(const std::string& first_name) {
             break;
         }
         case 3: {
+            std::string lastLogLines = logger.ReadLastLines(10);
+            std::cout << "Last 10 log lines:\n" << lastLogLines << std::endl;
+
+            std::string logContent = logger.ReadLog();
+            std::cout << "Log Content:" << std::endl << logContent << std::endl;
+            break;
+        }
+
+
+
+        case 4: {
             std::string first_name_to_delete;
             std::cout << "Enter the first name of the user to delete: ";
             std::cin >> first_name_to_delete;
@@ -117,7 +132,7 @@ void chatRoom(const std::string& first_name) {
             }
             break;
         }
-        case 4: {
+        case 5: {
             std::cout << "Exiting Chat Room." << std::endl;
             logger.WriteLog("Exiting Chat Room.");
             return;
@@ -128,7 +143,7 @@ void chatRoom(const std::string& first_name) {
             break;
         }
         }
-    } while (choice != 3);
+    } while (true);
 }
 
 void chatMenu() {
@@ -191,7 +206,3 @@ void chatMenu() {
         }
     } while (userChoice != 3);
 }
-
-
-
-

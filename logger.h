@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <fstream>
-#include <shared_mutex>
+#include <mutex>
 
 class Logger {
 public:
@@ -11,10 +11,12 @@ public:
     void WriteLog(const std::string& logMessage);
     std::string ReadLog();
 
+     std::string ReadLastLines(int numLines);
+
 private:
     std::string logFilePath;
     std::fstream logFile;
-    mutable std::shared_mutex fileMutex;
+    std::mutex fileMutex;
 };
 
 extern Logger logger;
