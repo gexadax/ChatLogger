@@ -5,17 +5,6 @@
 #include <vector>
 
 class UserManager {
-//private:
-//    SQLRETURN ret;
-//    SQLHANDLE hstmt;
-//    SQLHDBC hdbc;
-//    struct User {
-//        std::string first_name;
-//        std::string last_name;
-//        std::string email;
-//        std::string password_hash;
-//    };
-//    std::vector<User> users;
     
 public:
     UserManager();

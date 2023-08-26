@@ -59,6 +59,7 @@ void ChatManager::displayUserChat(const std::string& username) {
 
 
 void chatRoom(const std::string& first_name) {
+    std::system("cls");
     int choice;
 
     do {
@@ -119,6 +120,7 @@ void chatRoom(const std::string& first_name) {
 }
 
 void chatMenu() {
+    std::system("cls");
     UserManager userManager;
     DatabaseManager dbManager;
     std::string first_name, password_hash;
@@ -146,6 +148,7 @@ void chatMenu() {
         }
         case 2: {
             std::cout << "Enter your first name: "; std::cin >> first_name;
+            std::cout << "Enter your password hash: "; std::cin >> password_hash;
 
             if (userManager.loginPass(first_name, password_hash)) {
                 std::cout << "Login successful. Welcome, " << first_name << "!" << std::endl;

@@ -274,3 +274,356 @@ Connected to the database.
 Retrieved user_id: 
 Login successful. User ID: 
 Failed to retrieve sender ID.
+Disconnecting from the database...
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Failed to retrieve sender ID.
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Failed to retrieve sender ID.
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Failed to retrieve sender ID.
+Connecting to the database...
+Connected to the database.
+Login failed.
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Failed to retrieve sender ID.
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Failed to retrieve sender ID.
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Failed to register user.
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Failed to retrieve sender ID.
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Failed to retrieve sender ID.
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Failed to retrieve sender ID.
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Failed to retrieve sender ID.
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Failed to retrieve sender ID.
+Disconnecting from the database...
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Failed to retrieve sender ID.
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Failed to retrieve sender ID.
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Disconnecting from the database...
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Failed to retrieve sender ID.
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Failed to retrieve sender ID.
+Connecting to the database...
+Connected to the database.
+Login failed.
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Connecting to the database...
+Connected to the database.
+Disconnecting from the database...
+Disconnected from the database.
+Failed to retrieve sender ID.
+Failed to retrieve sender ID.
+Failed to register user.
+Disconnecting from the database...
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Disconnecting from the database...
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Connecting to the database...
+Connected to the database.
+Failed to retrieve sender ID.
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Connecting to the database...
+Connected to the database.
+Message sent.
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Connecting to the database...
+Connected to the database.
+Message sent.
+Connecting to the database...
+Connected to the database.
+Disconnecting from the database...
+Disconnected from the database.
+Disconnecting from the database...
+Failed to register user.
+Failed to register user.
+Failed to register user.
+Failed to register user.
+Failed to register user.
+Failed to register user.
+Failed to register user.
+Connecting to the database...
+Connected to the database.
+User registered successfully.
+Connecting to the database...
+Connected to the database.
+Disconnecting from the database...
+Disconnected from the database.
+Disconnecting from the database...
+Connecting to the database...
+Connected to the database.
+Login failed.
+Connecting to the database...
+Connected to the database.
+Login failed.
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Connecting to the database...
+Connected to the database.
+Disconnecting from the database...
+Disconnected from the database.
+Connecting to the database...
+Connected to the database.
+Message sent.
+Disconnecting from the database...
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Connecting to the database...
+Connected to the database.
+Disconnecting from the database...
+Disconnected from the database.
+Connecting to the database...
+Connected to the database.
+Disconnecting from the database...
+Disconnected from the database.
+Connecting to the database...
+Connected to the database.
+Disconnecting from the database...
+Disconnected from the database.
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Connecting to the database...
+Connected to the database.
+Message sent.
+Connecting to the database...
+Connected to the database.
+Disconnecting from the database...
+Disconnected from the database.
+Connecting to the database...
+Connected to the database.
+Disconnecting from the database...
+Disconnected from the database.
+Connecting to the database...
+Connected to the database.
+Disconnecting from the database...
+Disconnected from the database.
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Connecting to the database...
+Connected to the database.
+Message sent.
+Connecting to the database...
+Connected to the database.
+Disconnecting from the database...
+Disconnected from the database.
+Disconnecting from the database...
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Connecting to the database...
+Connected to the database.
+Message sent.
+Connecting to the database...
+Connected to the database.
+Disconnecting from the database...
+Disconnected from the database.
+Connecting to the database...
+Connected to the database.
+Retrieved user_id: 
+Login successful. User ID: 
+Connecting to the database...
+Connected to the database.
