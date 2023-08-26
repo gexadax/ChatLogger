@@ -1,4 +1,6 @@
 #include "logger.h"
+#include <iostream>
+#include <ctime>
 
 Logger::Logger(const std::string& logFilePath) : logFilePath(logFilePath) {
     logFile.open(logFilePath, std::ios::out | std::ios::app);
@@ -11,7 +13,14 @@ Logger::~Logger() {
 void Logger::WriteLog(const std::string& logMessage) {
     std::unique_lock<std::shared_mutex> lock(fileMutex);
     if (logFile.is_open()) {
-        logFile << logMessage << std::endl;
+        time_t now = time(0);
+        struct tm currentTime;
+        localtime_s(&currentTime, &now);
+
+        char timeStr[80];
+        strftime(timeStr, sizeof(timeStr), "%Y-%m-%d %H:%M:%S", &currentTime);
+
+        logFile << "[" << timeStr << "] " << logMessage << std::endl;
     }
 }
 
