@@ -20,7 +20,7 @@ void Logger::WriteLog(const std::string& logMessage) {
         char timeStr[80];
         strftime(timeStr, sizeof(timeStr), "%Y-%m-%d %H:%M:%S", &currentTime);
 
-        logFile << "[" << timeStr << "] " << logMessage << std::endl;
+        logFile << "[" << timeStr << "] " << logMessage << std::endl;logger.WriteLog("");
     }
 }
 

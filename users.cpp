@@ -99,7 +99,7 @@ bool UserManager::loginPass(const std::string& first_name, const std::string& pa
 
         ret = SQLExecute(hstmt);
 
-        SQLINTEGER user_id;
+        SQLINTEGER user_id = 0;
         ret = SQLBindCol(hstmt, 1, SQL_C_SLONG, &user_id, sizeof(user_id), NULL);
 
         ret = SQLFetch(hstmt);

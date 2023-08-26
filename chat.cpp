@@ -3,12 +3,15 @@
 #include <iostream>
 #include "users.h"
 #include "message.h"
+#include "logger.h"
 
 SQLRETURN ret;
 SQLHANDLE henv;
 SQLHANDLE hdbc;
 SQLHANDLE hstmt;
 MessageManager messageManager;
+
+Logger logger("log.txt");
 
 void ChatManager::displayUserChat(const std::string& username) {
     DatabaseManager dbManager;
@@ -30,6 +33,7 @@ void ChatManager::displayUserChat(const std::string& username) {
 
         if (ret == SQL_SUCCESS || ret == SQL_SUCCESS_WITH_INFO) {
             std::cout << "Chat history for user '" << username << "':" << std::endl;
+            logger.WriteLog("Chat history for user");
 
             SQLCHAR senderName[50], message[1000], timestamp[50];
             SQLLEN senderNameLen, messageLen, timestampLen;
@@ -39,12 +43,13 @@ void ChatManager::displayUserChat(const std::string& username) {
                 SQLGetData(hstmt, 2, SQL_C_CHAR, message, sizeof(message), &messageLen);
                 SQLGetData(hstmt, 3, SQL_C_CHAR, timestamp, sizeof(timestamp), &timestampLen);
 
-                std::cout << timestamp << " " << senderName << ": " << message << std::endl;
+                std::cout << timestamp << " " << senderName << ": " << message << std::endl;logger.WriteLog("");
             }
 
         }
         else {
             std::cerr << "Failed to retrieve chat history." << std::endl;
+            logger.WriteLog("Failed to retrieve chat history.");
             dbManager.disconnectFromDatabase();
             return;
         }
@@ -54,15 +59,16 @@ void ChatManager::displayUserChat(const std::string& username) {
     }
     else {
         std::cerr << "Failed to connect to the database." << std::endl;
+        logger.WriteLog("Failed to connect to the database.");
     }
 }
-
 
 void chatRoom(const std::string& first_name) {
     std::system("cls");
     int choice;
 
     do {
+        
         std::cout << "Chat Room Options:" << std::endl;
         std::cout << "1. Send Message" << std::endl;
         std::cout << "2. Read Messages" << std::endl;
@@ -83,9 +89,11 @@ void chatRoom(const std::string& first_name) {
 
             if (messageManager.sendMessage(first_name, receiverFirstName, messageText)) {
                 std::cout << "Message sent." << std::endl;
+                logger.WriteLog("Message sent.");
             }
             else {
                 std::cout << "Failed to send message." << std::endl;
+                logger.WriteLog("Failed to send message.");
             }
             break;
         }
@@ -101,18 +109,22 @@ void chatRoom(const std::string& first_name) {
             UserManager userManager;
             if (userManager.deleteUserAndMessages(first_name_to_delete)) {
                 std::cout << "User and related messages deleted successfully." << std::endl;
+                logger.WriteLog("User and related messages deleted successfully.");
             }
             else {
                 std::cout << "Failed to delete user and related messages." << std::endl;
+                logger.WriteLog("Failed to delete user and related messages.");
             }
             break;
         }
         case 4: {
             std::cout << "Exiting Chat Room." << std::endl;
+            logger.WriteLog("Exiting Chat Room.");
             return;
         }
         default: {
             std::cout << "Invalid choice. Please select a valid option." << std::endl;
+            logger.WriteLog("Invalid choice. Please select a valid option.");
             break;
         }
         }
@@ -120,7 +132,7 @@ void chatRoom(const std::string& first_name) {
 }
 
 void chatMenu() {
-    std::system("cls");
+
     UserManager userManager;
     DatabaseManager dbManager;
     std::string first_name, password_hash;
@@ -132,6 +144,7 @@ void chatMenu() {
 
         switch (userChoice) {
         case 1: {
+            std::system("cls");
             std::string last_name, email;
             std::cout << "Enter your first name: "; std::cin >> first_name;
             std::cout << "Enter your last name: "; std::cin >> last_name;
@@ -139,10 +152,12 @@ void chatMenu() {
 
             if (userManager.registerUser(first_name, last_name, email)) {
                 std::cout << "Registration successful. Welcome, " << first_name << "!" << std::endl;
+                logger.WriteLog("Registration successful. Welcome");
                 chatRoom(first_name);
             }
             else {
                 std::cout << "Registration failed. Please try again." << std::endl;
+                logger.WriteLog("Registration failed. Please try again.");
             }
             break;
         }
@@ -152,21 +167,25 @@ void chatMenu() {
 
             if (userManager.loginPass(first_name, password_hash)) {
                 std::cout << "Login successful. Welcome, " << first_name << "!" << std::endl;
+                logger.WriteLog("Login successful. Welcome");
                 chatRoom(first_name);
             }
             else {
                 std::cout << "Login failed. Please check your credentials." << std::endl;
+                logger.WriteLog("Login failed. Please check your credentials.");
             }
             break;
         }
         case 3: {
             std::cout << "Exiting the chat." << std::endl;
+            logger.WriteLog("Exiting the chat.");
             dbManager.disconnectFromDatabase();
 
             return;
         }
         default: {
             std::cout << "Invalid choice. Please select a valid option." << std::endl;
+            logger.WriteLog("Invalid choice. Please select a valid option.");
             break;
         }
         }
