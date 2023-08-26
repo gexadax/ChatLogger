@@ -11,38 +11,52 @@ SQLHANDLE hstmt;
 MessageManager messageManager;
 
 void ChatManager::displayUserChat(const std::string& username) {
+    DatabaseManager dbManager;
+    if (dbManager.connectToDatabase()) {
+        SQLRETURN ret;
+        SQLHANDLE hstmt;
+        SQLHANDLE hdbc = dbManager.getHDBC();
+        std::string queryGetChat = "SELECT u.first_name, m.message_text, m.send_date "
+            "FROM messages m "
+            "INNER JOIN users u ON m.sender_id = u.user_id "
+            "WHERE u.first_name = ? "
+            "ORDER BY m.send_date";
 
-    SQLRETURN ret;
-    SQLHANDLE hstmt;
-    std::string queryGetChat = "SELECT u.first_name, m.message_text, m.send_date "
-        "FROM messages m "
-        "INNER JOIN users u ON m.sender_id = u.user_id "
-        "WHERE u.first_name = ? "
-        "ORDER BY m.send_date";
+        ret = SQLAllocHandle(SQL_HANDLE_STMT, hdbc, &hstmt);
+        ret = SQLPrepareA(hstmt, (SQLCHAR*)queryGetChat.c_str(), SQL_NTS);
+        ret = SQLBindParameter(hstmt, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, 50, 0, (SQLCHAR*)username.c_str(), 0, NULL);
 
-    ret = SQLAllocHandle(SQL_HANDLE_STMT, hdbc, &hstmt);
-    ret = SQLPrepareA(hstmt, (SQLCHAR*)queryGetChat.c_str(), SQL_NTS);
-    ret = SQLBindParameter(hstmt, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, 50, 0, (SQLCHAR*)username.c_str(), 0, NULL);
+        ret = SQLExecute(hstmt);
 
-    ret = SQLExecute(hstmt);
+        if (ret == SQL_SUCCESS || ret == SQL_SUCCESS_WITH_INFO) {
+            std::cout << "Chat history for user '" << username << "':" << std::endl;
 
-    if (ret == SQL_SUCCESS || ret == SQL_SUCCESS_WITH_INFO) {
-        std::cout << "Chat history for user '" << username << "':" << std::endl;
+            SQLCHAR senderName[50], message[1000], timestamp[50];
+            SQLLEN senderNameLen, messageLen, timestampLen;
 
-        SQLCHAR senderName[50], message[1000], timestamp[50];
-        SQLLEN senderNameLen, messageLen, timestampLen;
+            while (SQLFetch(hstmt) == SQL_SUCCESS) {
+                SQLGetData(hstmt, 1, SQL_C_CHAR, senderName, sizeof(senderName), &senderNameLen);
+                SQLGetData(hstmt, 2, SQL_C_CHAR, message, sizeof(message), &messageLen);
+                SQLGetData(hstmt, 3, SQL_C_CHAR, timestamp, sizeof(timestamp), &timestampLen);
 
-        while (SQLFetch(hstmt) == SQL_SUCCESS) {
-            SQLGetData(hstmt, 1, SQL_C_CHAR, senderName, sizeof(senderName), &senderNameLen);
-            SQLGetData(hstmt, 2, SQL_C_CHAR, message, sizeof(message), &messageLen);
-            SQLGetData(hstmt, 3, SQL_C_CHAR, timestamp, sizeof(timestamp), &timestampLen);
+                std::cout << timestamp << " " << senderName << ": " << message << std::endl;
+            }
 
-            std::cout << timestamp << " " << senderName << ": " << message << std::endl;
+        }
+        else {
+            std::cerr << "Failed to retrieve chat history." << std::endl;
+            dbManager.disconnectFromDatabase();
+            return;
         }
 
+        SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
+        dbManager.disconnectFromDatabase();
     }
-
+    else {
+        std::cerr << "Failed to connect to the database." << std::endl;
+    }
 }
+
 
 void chatRoom(const std::string& first_name) {
     int choice;
@@ -120,9 +134,8 @@ void chatMenu() {
             std::cout << "Enter your first name: "; std::cin >> first_name;
             std::cout << "Enter your last name: "; std::cin >> last_name;
             std::cout << "Enter your email: "; std::cin >> email;
-            std::cout << "Enter your password hash: "; std::cin >> password_hash;
 
-            if (userManager.registerUser(first_name, last_name, email, password_hash)) {
+            if (userManager.registerUser(first_name, last_name, email)) {
                 std::cout << "Registration successful. Welcome, " << first_name << "!" << std::endl;
                 chatRoom(first_name);
             }
@@ -133,7 +146,6 @@ void chatMenu() {
         }
         case 2: {
             std::cout << "Enter your first name: "; std::cin >> first_name;
-            std::cout << "Enter your password hash: "; std::cin >> password_hash;
 
             if (userManager.loginPass(first_name, password_hash)) {
                 std::cout << "Login successful. Welcome, " << first_name << "!" << std::endl;
