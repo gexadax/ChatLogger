@@ -75,8 +75,8 @@ std::string Logger::ReadLastLines(int numLines) {
         std::streampos fileSize = logFile.tellg();
 
         if (fileSize <= 0) {
-            return ""; // Лог пустой
-        } // Закрываем блок условия здесь
+            return "";
+        }
 
         while (std::getline(logFile, line)) {
             lines.push_back(line);
